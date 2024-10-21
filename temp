@@ -1,0 +1,2 @@
+'ACf.sh: line 8: syntax error near unexpected token `do
+'ACf.sh: line 8: `for USER_HOME in /Users/*; do
