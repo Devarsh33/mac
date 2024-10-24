@@ -3,3 +3,11 @@ sed -i '' 's/\r$//' ACf.sh
 'ACf.sh: line 8: syntax error near unexpected token `do
 'ACf.sh: line 8: `for USER_HOME in /Users/*; do
 https://file.io/XB0RuROLBAtH
+
+
+Collecting Safari data for user devarsh...
+Error: unable to open database "/Users/devarsh/Library/Safari/History.db": authorization denied
+Collecting Google Chrome data for user devarsh...
+Error: in prepare, database is locked (5)
+Collecting Mozilla Firefox data for user devarsh...
+Forensic data has been collected and zipped: /tmp/browser_forensics_all_profiles_20241024154626.zip
