@@ -4,6 +4,14 @@
 OUTPUT_DIR="/tmp/browser_forensics_$(date +%Y%m%d%H%M%S)"
 mkdir -p "$OUTPUT_DIR"
 
+# Function to close all specified browsers
+close_browsers() {
+    echo "Closing Safari, Chrome, and Firefox..."
+    killall "Safari" &> /dev/null
+    killall "Google Chrome" &> /dev/null
+    killall "firefox" &> /dev/null
+}
+
 # Function to extract history from a SQLite database
 extract_history() {
     DB_PATH=$1
@@ -14,6 +22,9 @@ extract_history() {
         sqlite3 "$DB_PATH" "$SQL_QUERY" >> "$OUTPUT_FILE"
     fi
 }
+
+# Close browsers to prevent database locking issues
+close_browsers
 
 # Loop through all user profiles on the system
 for USER_HOME in /Users/*; do
@@ -28,7 +39,6 @@ for USER_HOME in /Users/*; do
         echo "Collecting Safari data for user $USER..."
         mkdir -p "$USER_OUTPUT_DIR/Safari"
         
-        # Collect Safari History and extract in readable format with timestamps
         SAFARI_HISTORY_DB="$USER_HOME/Library/Safari/History.db"
         SAFARI_OUTPUT_FILE="$USER_OUTPUT_DIR/Safari/history.csv"
         echo "URL, Title, Last Visited" > "$SAFARI_OUTPUT_FILE"
@@ -41,7 +51,6 @@ for USER_HOME in /Users/*; do
         echo "Collecting Google Chrome data for user $USER..."
         mkdir -p "$USER_OUTPUT_DIR/Chrome"
         
-        # Collect Chrome History and extract in readable format with timestamps
         CHROME_HISTORY_DB="$USER_HOME/Library/Application Support/Google/Chrome/Default/History"
         CHROME_OUTPUT_FILE="$USER_OUTPUT_DIR/Chrome/history.csv"
         echo "URL, Title, Last Visited" > "$CHROME_OUTPUT_FILE"
@@ -54,14 +63,12 @@ for USER_HOME in /Users/*; do
         echo "Collecting Mozilla Firefox data for user $USER..."
         mkdir -p "$USER_OUTPUT_DIR/Firefox"
         
-        # Find Firefox profile(s)
         FIREFOX_PROFILE_DIR="$USER_HOME/Library/Application Support/Firefox/Profiles"
         for PROFILE in "$FIREFOX_PROFILE_DIR"/*; do
             PROFILE_NAME=$(basename "$PROFILE")
             PROFILE_OUTPUT_DIR="$USER_OUTPUT_DIR/Firefox/$PROFILE_NAME"
             mkdir -p "$PROFILE_OUTPUT_DIR"
 
-            # Collect Firefox History and extract in readable format with timestamps
             FIREFOX_HISTORY_DB="$PROFILE/places.sqlite"
             FIREFOX_OUTPUT_FILE="$PROFILE_OUTPUT_DIR/history.csv"
             echo "URL, Title, Last Visited" > "$FIREFOX_OUTPUT_FILE"
