@@ -38,9 +38,8 @@ for USER_HOME in /Users/*; do
     if [ -d "$USER_HOME/Library/Safari" ]; then
         echo "Collecting Safari data for user $USER..."
         mkdir -p "$USER_OUTPUT_DIR/Safari"
-
-        cp "$USER_HOME/Library/Safari/History.db" /tmp/History.db
-        SAFARI_HISTORY_DB="/tmp/History.db"
+        
+        SAFARI_HISTORY_DB="$USER_HOME/Library/Safari/History.db"
         SAFARI_OUTPUT_FILE="$USER_OUTPUT_DIR/Safari/history.csv"
         echo "URL, Title, Last Visited" > "$SAFARI_OUTPUT_FILE"
         extract_history "$SAFARI_HISTORY_DB" "$SAFARI_OUTPUT_FILE" \
